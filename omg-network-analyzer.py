@@ -4,14 +4,31 @@ from web3 import Web3
 import json
 
 #Vars
-infura_url = "https://mainnet.infura.io/v3/8c300834a4484968b3b8556dbbb38ece"
+infura_url = "<INSERT INFURA URL HERE"
 web3_url = Web3(Web3.HTTPProvider(infura_url))
-filename = "omg_abi.json"
+omg_abi_file = "json_files/omg_abi.json"
+infura_url = "json_files/infura_url.json"
 address = "0xd26114cd6EE289AccF82350c8d8487fedB8A0C07"
+
+
+# def load_infura_url():
+# 	try:
+# 		with open(infura_url_file) as infura:
+# 			infura_url = json.load(infura)
+# 			return infura_url
+# 	except ValueError:
+# 		print("The infura url failed to load correctly.")
 
 #is the connection established?
 
-
+def load_abu_json_file():
+	try:
+		with open(omg_abi_file) as f:
+			abi_data = json.load(f)
+			# print(json.dumps(abi_data, indent=4, sort_keys=True))
+			return abi_data
+	except ValueError:
+		print("The ABI data did not load correctly.")
 
 def test_web_connection():
 	try:
@@ -20,17 +37,6 @@ def test_web_connection():
 			print("Connection to the etherium network is establishe...\n")
 	except ConnectionError:
 		print("Connection to the ehterium network has failed...\n")
-
-
-def load_abu_json_file():
-	try:
-		with open(filename) as f:
-			abi_data = json.load(f)
-			# print(json.dumps(abi_data, indent=4, sort_keys=True))
-			return abi_data
-	except ValueError:
-		print("The ABI data did not load correctly.")
-
 
 
 def build_contract(address,abi_data):
