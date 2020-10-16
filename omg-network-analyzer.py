@@ -17,7 +17,7 @@ def load_infura_url():
 		with open(infura_url_file) as infura:
 			infura_url = json.load(infura)
 			return infura_url["infura_url"]
-	except ValueError:
+	except FileNotFoundError:
 		print("The infura url failed to load correctly.")
 
 def load_abu_json_file():
@@ -25,9 +25,8 @@ def load_abu_json_file():
 	try:
 		with open(omg_abi_file) as f:
 			abi_data = json.load(f)
-			# print(json.dumps(abi_data, indent=4, sort_keys=True))
 			return abi_data
-	except ValueError:
+	except FileNotFoundError:
 		print("The ABI data did not load correctly.")
 
 def test_web_connection():
@@ -36,7 +35,7 @@ def test_web_connection():
 		if are_we_connected == True:
 			print("Connection to the etherium network is established...\n")
 	except ConnectionError:
-		print("Connection to the ehterium network has failed...\n")
+		print("Connection to the etherium network has failed...\n")
 
 def build_contract(address,abi_data):
 	""" address is the address of the deployed contract on the blockchain.  With these two pieces of information, we can recontract the smart contract in python and interact with it - https://etherscan.io/token/0xd26114cd6EE289AccF82350c8d8487fedB8A0C07 """
@@ -60,6 +59,18 @@ def get_latest_eth_block():
 	except ValueError:
 		print("We are unable to pull the latest OMG block information from the network.")
 
+def request_specific_block_information():
+	block_number_request = input("Insert block number you'd like to view on the network: ")
+	try:
+		block_number_request = int(block_number_request)
+		run_the_block = web3_url.eth.getBlock(block_number_request)
+		if run_the_block == False:
+			print("That block number is not valid...")
+		else:
+			print(f"Here is some information about your block number you requested: \n\t {run_the_block}\n")
+	except:
+		print("Please enter a valid block number on the Etherium blockchain.")
+	
 if __name__ == "__main__":
 	""" load the URL, pass it to the web3 library, test the connection, and load the ABU data from the JSON file (found on etherscan.com)"""
 
@@ -73,6 +84,7 @@ if __name__ == "__main__":
 	latest_block_num = get_latest_eth_block_number()
 	latest_eth_block_info = get_latest_eth_block()
 	total_supply = contract.functions.totalSupply().call()
+	request_specific_block_info = request_specific_block_information()
 	
 	""" Calling all the functions!!!!!! """
 	#prints token name
@@ -81,7 +93,7 @@ if __name__ == "__main__":
 	# prints total suppy of the token
 	print(f"Total supply of OMG Network tokens: \n\t {web3_url.fromWei(total_supply, 'ether')}\n")
 	#prints latest block
-	print(f"Here is the latest OMG block information on the OMG Network:\n\t {latest_eth_block_info}")
+	# print(f"Here is the latest OMG block information on the OMG Network:\n\t {json.dumps(abi_data, indent=4, sort_keys=True)}")
 	# dumps out information on the latest OMG Network ehterium block
 	
 	
